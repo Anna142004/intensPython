@@ -1,0 +1,24 @@
+def rearrange_array(arr):
+  """
+  Перераспределяет элементы массива таким образом, чтобы все отрицательные элементы 
+  были сначала, а затем все неотрицательные.
+
+  Args:
+    arr: Массив для перераспределения.
+
+  Returns:
+    Новый массив с перераспределенными элементами.
+  """
+  negative_elements = []
+  non_negative_elements = []
+  for element in arr:
+    if element < 0:
+      negative_elements.append(element)
+    else:
+      non_negative_elements.append(element)
+  return negative_elements + non_negative_elements
+
+# Пример использования
+arr = [1, -2, 3, -4, 5]
+rearranged_arr = rearrange_array(arr)
+print(rearranged_arr)
