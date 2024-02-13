@@ -1,0 +1,30 @@
+#include <iostream>
+#include <vector>
+
+std::vector<int> rearrange_array(const std::vector<int>& arr) {
+  std::vector<int> negative_elements;
+  std::vector<int> non_negative_elements;
+
+  for (int element : arr) {
+    if (element < 0) {
+      negative_elements.push_back(element);
+    } else {
+      non_negative_elements.push_back(element);
+    }
+  }
+
+  negative_elements.insert(negative_elements.end(), non_negative_elements.begin(), non_negative_elements.end());
+  return negative_elements;
+}
+
+int main() {
+  std::vector<int> arr = {1, -2, 3, -4, 5};
+
+  std::vector<int> rearranged_arr = rearrange_array(arr);
+  for (int element : rearranged_arr) {
+    std::cout << element << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
