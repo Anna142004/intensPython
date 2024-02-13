@@ -1,0 +1,19 @@
+def is_palindrom(n):
+    #Проверяет является ли число палиндромом.
+        Args:
+        n: число для проверки.
+        
+        Returns:
+        True,если число является палиндромом,
+        False- в противном случае.
+        
+        n_str=str(n)
+        return n_str == n_str[::-1]
+        
+            # Пример использования 
+            number = 12321
+            if is_palindrome(number):
+              print(number,"является палиндромом")
+              else:
+               print(number,"не является палиндромом")
+            
