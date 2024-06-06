@@ -1,0 +1,208 @@
+1) import random
+import math
+
+# Определение параметров прямых
+def random_line():
+    a = random.random()
+    b = random.random()
+    c = random.random()
+    return a, b, c
+
+# Определение координат точки
+def random_point():
+    x = random.random()
+    y = random.random()
+    return x, y
+
+# Расстояние от точки до прямой
+def distance_to_line(x, y, a, b, c):
+    return abs(a * x + b * y + c) / math.sqrt(a2 + b2)
+
+# Точка пересечения прямых
+def intersection_point(a1, b1, c1, a2, b2, c2):
+    x = (b2 * c1 - b1 * c2) / (a1 * b2 - a2 * b1)
+    y = (a1 * c2 - a2 * c1) / (a1 * b2 - a2 * b1)
+    return x, y
+
+# Расстояние от точки до точки пересечения
+def distance_to_intersection(x, y, x_i, y_i):
+    return math.sqrt((x - x_i)2 + (y - y_i)2)
+
+# Угол между прямыми
+def angle_between_lines(a1, b1, a2, b2):
+    angle = math.acos((a1 * a2 + b1 * b2) / (math.sqrt(a12 + b12) * math.sqrt(a22 + b22)))
+    angle_degrees = math.degrees(angle)
+    return angle_degrees
+
+# Генерация данных
+line1_params = random_line()
+line2_params = random_line()
+point_coords = random_point()
+
+# Расчеты
+distance1 = distance_to_line(*point_coords, *line1_params)
+distance2 = distance_to_line(*point_coords, *line2_params)
+intersection = intersection_point(*line1_params, *line2_params)
+distance_to_intersection_point = distance_to_intersection(*point_coords, *intersection)
+angle = angle_between_lines(*line1_params, *line2_params)
+
+# Вывод результатов
+print("Параметры первой прямой:", line1_params)
+print("Параметры второй прямой:", line2_params)
+print("Координаты точки:", point_coords)
+print("Расстояние от точки до первой прямой:", distance1)
+print("Расстояние от точки до второй прямой:", distance2)
+print("Координаты точки пересечения:", intersection)
+print("Расстояние от точки до точки пересечения:", distance_to_intersection_point)
+print("Угол между прямыми:", angle)
+
+2)import random
+import math
+
+# Определение уравнений плоскости
+def random_plane():
+    a = random.random()
+    b = random.random()
+    c = random.random()
+    d = random.random()
+    return a, b, c, d
+
+# Определение координаты точки
+def random_point():
+    x = random.random()
+    y = random.random()
+    z = random.random()
+    return x, y, z
+
+# Расстояние от точки до плоскости
+def distance_to_plane(x, y, z, a, b, c, d):
+    return abs(a * x + b * y + c * z + d) / math.sqrt(a2 + b2 + c**2)
+
+# Проверка параллельности плоскостей
+def are_planes_parallel(a1, b1, c1, d1, a2, b2, c2, d2):
+    return (a1 * a2 + b1 * b2 + c1 * c2) == 0
+
+# Расстояние между параллельными плоскостями
+def distance_between_parallel_planes(a1, b1, c1, d1, a2, b2, c2, d2):
+    n1 = math.sqrt(a12 + b12 + c1**2)
+    n2 = math.sqrt(a22 + b22 + c2**2)
+    return abs(d1 - d2) / math.sqrt(n12 + n22)
+
+# Угол между плоскостями
+def angle_between_planes(a1, b1, c1, a2, b2, c2):
+    cos_angle = (a1 * a2 + b1 * b2 + c1 * c2) / (math.sqrt(a12 + b12 + c12) * math.sqrt(a22 + b22 + c22))
+    angle = math.acos(cos_angle)
+    angle_degrees = math.degrees(angle)
+    return angle_degrees
+
+# Направление вектора нормали к плоскости
+def normal_vector(a, b, c):
+    n = math.sqrt(a2 + b2 + c**2)
+    return a / n, b / n, c / n
+
+# Уравнение прямой, проходящей через точку и перпендикулярной плоскости
+def line_from_point_normal(x0, y0, z0, nx, ny, nz):
+    d = -(nx * x0 + ny * y0 + nz * z0)
+    return nx, ny, nz, d
+
+# Точка пересечения плоскостей
+def intersection_point_planes(a1, b1, c1, d1, a2, b2, c2, d2):
+    nx1, ny1, nz1 = normal_vector(a1, b1, c1)
+    nx2, ny2, nz2 = normal_vector(a2, b2, c2)
+
+    # Решение системы линейных уравнений
+    A = [[nx1, ny1, nz1], [nx2, ny2, nz2]]
+    b = [-d1, -d2]
+    x, y, z = np.linalg.solve(A, b)
+
+    return x, y, z
+
+# Генерация данных
+plane1_params = random_plane()
+plane2_params = random_plane()
+point_coords = random_point()
+
+# Расчеты
+distance1 = distance_to_plane(*point_coords, *plane1_params)
+distance2 = distance_to_plane(*point_coords, *plane2_params)
+is_parallel = are_planes_parallel(*plane1_params, *plane2_params)
+if is_parallel:
+    distance_between_planes = distance
+
+3)import random
+
+# Определение параметров параболы
+def random_parabola():
+    a = random.random()
+    b = random.random()
+    c = random.random()
+    return a, b, c
+
+# Определение координаты точки
+def random_point():
+    x = random.random()
+    y = random.random()
+    return x, y
+
+# Проверка принадлежности точки параболе
+def is_point_on_parabola(x, y, a, b, c):
+    return y**2 == 2 * a * x + b * x + c
+
+# Генерация данных
+parabola_params = random_parabola()
+point_coords = random_point()
+
+# Расчеты
+is_on_parabola = is_point_on_parabola(*point_coords, *parabola_params)
+
+# Вывод результатов
+print("Параметры параболы:", parabola_params)
+print("Координаты точки:", point_coords)
+print("Принадлежит ли точка параболе:", is_on_parabola)
+
+4)import random
+
+def is_point_in_elliptic_cylinder(x, y, z, a, b, h):
+    """
+    Проверяет, принадлежит ли точка (x, y, z) эллиптическому цилиндру.
+
+    Args:
+        x (float): Координата x точки.
+        y (float): Координата y точки.
+        z (float): Координата z точки.
+        a (float): Полуось эллипса по оси x.
+        b (float): Полуось эллипса по оси y.
+        h (float): Высота цилиндра.
+
+    Returns:
+        bool: True, если точка принадлежит цилиндру, False - иначе.
+    """
+    if x  2 / a  2 + y  2 / b  2 <= 1 and 0 <= z <= h:
+        return True
+    else:
+        return False
+
+def is_plane_intersecting_elliptic_cylinder(a, b, h, point, normal):
+    """
+    Проверяет, пересекает ли заданная плоскость заданный эллиптический цилиндр.
+
+    Args:
+        a (float): Полуось эллипса по оси x.
+        b (float): Полуось эллипса по оси y.
+        h (float): Высота цилиндра.
+        point (tuple): Координата точки на плоскости.
+        normal (tuple): Нормаль к плоскости.
+
+    Returns:
+        bool: True, если плоскость пересекает цилиндр, False - иначе.
+    """
+    # Проверим, пересекает ли плоскость ось z цилиндра
+    if normal[2] != 0:
+        return True
+
+    # Проверим, пересекает ли плоскость эллипс в основании цилиндра
+    plane_center = point - normal * (point[0] * normal[0] + point[1] * normal[1]) / (normal[0]  2 + normal[1]  2)
+    if plane_center[0]  2 / a  2 + plane_center[1]  2 / b  2 <= 1:
+        return True
+
+    # Плоскость не пересекает ни ось z, ни эллипс в основании цилиндра
