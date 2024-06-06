@@ -1,0 +1,118 @@
+1) #include <iostream>
+#include <vector>
+
+using namespace std;
+
+// Функция для вычисления производной кубического сплайна
+double spline_derivative(double x, double a, double b, double c, double d) {
+    return 3 * a * (x - b) + 2 * b * (x - c) + d;
+}
+
+// Функция для вычисления значения кубического сплайна
+double spline_value(double x, double a, double b, double c, double d) {
+    return a * (x - b) * (x - c) * (x - d) + b * (x - c) * (x - d) + c * (x - b) * (x - d) + d * (x - b) * (x - c);
+}
+
+int main() {
+    // Узлы интерполяции
+    vector<double> xi = {0.0, 1.0, 2.0, 3.0, 4.0};
+    vector<double> yi = {0.0, 0.5, 0.86603, 1.0, 0.86603};
+
+    // Вычисление коэффициентов кубических сплайнов
+    vector<double> a, b, c, d;
+
+    // Граничные условия
+    a[0] = 0.0;
+    c[3] = 0.0;
+
+    // Система уравнений для внутренних коэффициентов
+    for (int i = 1; i < 3; ++i) {
+        double h1 = xi[i] - xi[i - 1];
+        double h2 = xi[i + 1] - xi[i];
+
+        double d1 = 6 * ((yi[i] - yi[i - 1]) / h1 - (yi[i + 1] - yi[i]) / h2);
+        double d2 = 2 * (h1 + h2);
+
+        a[i] = d1 / d2;
+        b[i] = yi[i] - a[i] * h1 * h1 / 3;
+        c[i] = b[i] + a[i] * h2 * h2 / 3;
+    }
+
+    // Вычисление значения сплайна в точке x = 1.5
+    double x = 1.5;
+    int i = 1;
+    while (xi[i] < x) {
+        ++i;
+    }
+
+2) #include <iostream>
+#include <vector>
+
+using namespace std;
+
+// Функция для вычисления разности разделенных разностей
+vector<vector<double>> divided_differences(const vector<double>& x, const vector<double>& y) {
+    int n = x.size();
+    vector<vector<double>> f(n, vector<double>(n));
+
+    for (int i = 0; i < n; ++i) {
+        f[i][0] = y[i];
+    }
+
+    for (int j = 1; j < n; ++j) {
+        for (int i = 0; i < n - j; ++i) {
+            f[i][j] = (f[i + 1][j - 1] - f[i][j - 1]) / (x[i + j] - x[i]);
+        }
+    }
+
+    return f;
+}
+
+// Функция для вычисления значения интерполяционного многочлена Ньютона
+double newton_polynomial(const vector<double>& x, const vector<vector<double>>& f, double xi) {
+    int n = x.size();
+    double result = f[0][0];
+
+    for (int i = 1; i < n; ++i) {
+        double temp = f[0][i];
+        for (int j = i; j > 0; --j) {
+            temp *= (xi - x[j - 1]);
+        }
+        result += temp;
+    }
+
+    return result;
+}
+
+// Функция для вычисления погрешности интерполяции
+double interpolation_error(const vector<double>& x, const vector<double>& y, double xi, int n) {
+    double h = x[1] - x[0];
+    double max_der = abs(spline_derivative(x[n - 1] + h, a[n - 1], b[n - 1], c[n - 1], d[n - 1]));
+
+    for (int i = n - 2; i >= 0; --i) {
+        max_der = max(max_der, abs(spline_derivative(x[i] + h, a[i], b[i], c[i], d[i])));
+    }
+
+    return (max_der * pow(h, 3)) / (12 * (x[n - 1] - xi));
+}
+
+int main() {
+    // Данные
+    vector<double> x = {0.1 * M_PI, 0.2 * M_PI, 0.3 * M_PI, 0.4 * M_PI};
+    vector<double> y = {0.183, 0.342, 0.490, 0.628};
+
+    // Вычисление разности разделенных разностей
+    vector<vector<double>> f = divided_differences(x, y);
+
+    // Вычисление значения интерполяционного многочлена Ньютона в точке x*
+    double xi = 0.25 * M_PI;
+    double y_interp = newton_polynomial(x, f, xi);
+
+    // Вычисление погрешности интерполяции
+    double error = interpolation_error(x, y, xi, f.size());
+
+    cout << "Значение интерполяционного многочлена Ньютона в точке x* = 0.25π: " << y_interp << endl;
+    cout << "Погрешность интерполяции: " << error << endl;
+
+    return 0;
+}
