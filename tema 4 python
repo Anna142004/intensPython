@@ -1,0 +1,230 @@
+1) def gauss_jordan(a, b):
+    """
+    Функция для решения СЛАУ методом Гаусса-Жордана.
+
+    Args:
+        a (numpy.ndarray): Матрица коэффициентов.
+        b (numpy.ndarray): Столбец свободных членов.
+
+    Returns:
+        numpy.ndarray: Столбец решений.
+    """
+    n, m = a.shape
+
+    # Прямой ход
+    for i in range(n):
+        # Выбираем ведущий элемент
+        if a[i, i] == 0:
+            # Меняем строки, чтобы ведущий элемент был ненулевым
+            for j in range(i + 1, n):
+                if a[j, i] != 0:
+                    a[i], a[j] = a[j], a[i]
+                    b[i], b[j] = b[j], b[i]
+                    break
+
+        # Делаем ведущий элемент равным 1
+        if a[i, i] != 1:
+            a[i] /= a[i, i]
+            b[i] /= a[i, i]
+
+        # Обнуляем остальные элементы в столбце
+        for j in range(i + 1, n):
+            a[j] -= a[j, i] * a[i]
+            b[j] -= b[j, i] * b[i]
+
+    # Обратный ход
+    for i in range(n - 1, -1, -1):
+        # Обнуляем элементы ниже ведущего элемента
+        for j in range(i):
+            a[j] -= a[j, i] * a[i]
+            b[j] -= b[j, i] * b[i]
+
+        # Вычисляем элемент решения
+        x[i] = b[i] / a[i, i]
+
+    return x
+
+# Решение СЛАУ методом Гаусса-Жордана
+x = gauss_jordan(a, b)
+
+print("Решение методом Гаусса-Жордана:", x)
+
+2) def cramer_solve(a, b):
+    """
+    Функция для решения СЛАУ методом Крамера.
+
+    Args:
+        a (numpy.ndarray): Матрица коэффициентов.
+        b (numpy.ndarray): Столбец свободных членов.
+
+    Returns:
+        numpy.ndarray: Столбец решений.
+    """
+    n, m = a.shape
+
+    # Вычисляем определители матрицы и матриц с замененными столбцами
+    det_a = np.linalg.det(a)
+    det_x1 = np.linalg.det(np.hstack((b, a[:, 1:])))
+    det_x2 = np.linalg.det(np.hstack((a[:, 0], b, a[:, 2:])))
+    det_x3 = np.linalg.det(np.hstack((a[:, 0:2], b)))
+
+    # Вычисляем решения
+    x = np.array([det_x1 / det_a, det_x2 / det_a, det_x3 / det_a])
+
+    return x
+
+# Решение СЛАУ методом Крамера
+x = cramer_solve(a, b)
+
+print("Решение методом Крамера:", x
+
+def jacobi_solve(a, b, tol=1e-5, max_iter=100):
+    """
+    Функция для решения СЛАУ методом Якоби.
+
+    Args:
+        a (numpy.ndarray): Матрица коэффициентов.
+        b (numpy.ndarray): Столбец свободных членов.
+        tol (float): Погрешность.
+        max_iter (int): Максимальное количество итераций.
+
+    Returns:
+        numpy.ndarray: Столбец решений.
+    """
+    n, m = a.shape
+
+    # Инициализация
+    x = np.zeros(n)
+    err = np.inf
+
+    # Итерации
+    for it in range(max_iter):
+        x_new = np.zeros(n)
+
+        for i in range(n):
+            # Вычисляем новое значение x_i
+            sum_aij_x = 0
+            for j in range(n):
+                if i != j:
+                    sum_aij_x += a[i, j] * x[j]
+
+            x_new[i] = (b[i] - sum_aij_x) / a[i, i]
+
+        # Вычисляем погрешность
+        err = np.linalg.norm(x_new - x)
+
+        # Проверка условия остановки
+        if err < tol:
+            break
+
+        # Обновление решения
+        x = x_new
+
+    return x
+
+# Решение СЛАУ методом Якоби
+x = jacobi_solve(a, b)
+
+print("Решение методом Якоби:", x)
+
+3) def seidel_solve(a, b, tol=1e-5, max_iter=100):
+    """
+    Функция для решения СЛАУ методом Зейделя.
+
+    Args:
+        a (numpy.ndarray): Матрица коэффициентов.
+        b (numpy.ndarray): Столбец свободных членов.
+        tol (float): Погрешность.
+        max_iter (int): Максимальное количество итераций.
+
+    Returns:
+        numpy.ndarray: Столбец решений.
+    """
+    n, m = a.shape
+
+    # Инициализация
+    x = np.zeros(n)
+    err = np.inf
+
+    # Итерации
+    for it in range(max_iter):
+        x_new = np.zeros(n)
+
+        for i in range(n):
+            # Вычисляем новое значение x_i
+            sum_aij_x = 0
+            for j in range(i):
+                sum_aij_x += a[i, j] * x_new[j]
+
+            for j in range(i + 1, n):
+                sum_aij_x += a[i, j] * x[j]
+
+            x_new[i] = (b[i] - sum_aij_x) / a[i, i]
+
+        # Вычисляем погрешность
+        err = np.linalg.norm(x_new - x)
+
+        # Проверка условия остановки
+        if err < tol:
+            break
+
+        # Обновление решения
+        x = x_new
+
+    return x
+
+# Решение СЛАУ методом Зейделя
+x = seidel_solve(a, b)
+
+print("Решение методом Зейделя:", x) 
+
+4)def progonka_solve(a, b):
+    """
+    Функция для решения СЛАУ методом прогонки.
+
+    Args:
+        a (numpy.ndarray): Матрица коэффициентов.
+        b (numpy.ndarray): Столбец свободных членов.
+
+    Returns:
+        numpy.ndarray: Столбец решений.
+    """
+    n, m = a.shape
+
+    # Проверка диагональной доминанты
+    if not np.all(np.abs(np.diag(a)) > np.sum(np.abs(a), axis=1) - np.abs(np.diag(a)), axis=0):
+        raise ValueError("Матрица не является диагонально доминантной")
+
+    # Прямой ход
+    l = np.zeros(n)
+    u = np.zeros(n)
+
+    l[0] = 0
+    u[0] = a[0, 0]
+
+    for i in range(1, n):
+        l[i] = a[i, 0] / u[i - 1]
+        u[i] = a[i, i] - l[i] * a[i - 1, i]
+
+    # Вычисление y
+    y = np.zeros(n)
+    y[0] = b[0]
+
+    for i in range(1, n):
+        y[i] = b[i] - l[i] * y[i - 1]
+
+    # Обратный ход
+    x = np.zeros(n)
+    x[n - 1] = y[n - 1] / u[n - 1]
+
+    for i in range(n - 2, -1, -1):
+        x[i] = (y[i] - u[i] * x[i + 1]) / l[i]
+
+    return x
+
+# Решение СЛАУ методом прогонки
+x = progonka_solve(a, b)
+
+print("Решение методом прогонки:", x)
+
+
