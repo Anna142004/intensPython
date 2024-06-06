@@ -1,0 +1,355 @@
+1) #include <iostream>
+#include <cmath>
+
+using namespace std;
+
+// Структура для хранения параметров прямой
+struct Line {
+  double a, b, c; // Коэффициенты уравнения ax + by + c = 0
+};
+
+// Функция для вычисления расстояния от точки до прямой
+double distancePointLine(double x, double y, Line line) {
+  double d = abs(line.a * x + line.b * y + line.c) / sqrt(line.a * line.a + line.b * line.b);
+  return d;
+}
+
+// Функция для вычисления точки пересечения прямых
+Line intersectionPointLines(Line line1, Line line2) {
+  Line intersection;
+
+  // Решение системы уравнений
+  intersection.x = (line2.b * line1.c - line1.b * line2.c) / (line2.a * line1.b - line1.a * line2.b);
+  intersection.y = (line1.a * line2.c - line2.a * line1.c) / (line2.b * line1.a - line1.b * line2.a);
+
+  // Вычисление коэффициента c
+  intersection.c = -(intersection.a * intersection.x + intersection.b * intersection.y);
+
+  return intersection;
+}
+
+// Функция для вычисления расстояния от точки до точки
+double distancePointPoint(double x1, double y1, double x2, double y2) {
+  double d = sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+  return d;
+}
+
+// Функция для вычисления угла между прямыми
+double angleBetweenLines(Line line1, Line line2) {
+  double cos_angle = (line1.a * line2.a + line1.b * line2.b) /
+                    (sqrt(line1.a * line1.a + line1.b * line1.b) * sqrt(line2.a * line2.a + line2.b * line2.b));
+  double angle = acos(cos_angle); // В радианах
+
+  // Перевод в градусы
+  angle = angle * 180 / M_PI;
+
+  return angle;
+}
+
+int main() {
+  // Случайное генерирование параметров прямых и координаты точки
+  srand(time(NULL));
+
+  double a1 = (double)rand() / RAND_MAX;
+  double b1 = (double)rand() / RAND_MAX;
+  double c1 = (double)rand() / RAND_MAX;
+
+  double a2 = (double)rand() / RAND_MAX;
+  double b2 = (double)rand() / RAND_MAX;
+  double c2 = (double)rand() / RAND_MAX;
+
+  double x_point = (double)rand() / RAND_MAX;
+  double y_point = (double)rand() / RAND_MAX;
+
+  // Создание объектов Line
+  Line line1 = {a1, b1, c1};
+  Line line2 = {a2, b2, c2};
+
+  // Вычисление расстояний от точки до каждой прямой
+  double distance_to_line1 = distancePointLine(x_point, y_point, line1);
+  double distance_to_line2 = distancePointLine(x_point, y_point, line2);
+
+  // Вычисление точки пересечения прямых
+  Line intersection_point = intersectionPointLines(line1, line2);
+
+  // Вычисление расстояния от точки до точки пересечения
+  double distance_to_intersection = distancePointPoint(x_point, y_point, intersection_point.x, intersection_point.y);
+
+  // Вычисление угла между прямыми
+  double angle_between_lines = angleBetweenLines(line1, line2);
+
+  // Вывод результатов
+  cout << "Параметры первой прямой: a = " << a1 << ", b = " << b1 << ", c = " << c1 << endl;
+  cout << "Параметры второй прямой: a = " << a2 << ", b = " << b2 << ", c = " << c2 << endl;
+  cout << "Координаты точки: x = " << x_point << ", y = " << y_point <<
+
+2)
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+// Структура для хранения параметров плоскости
+struct Plane {
+  double A, B, C, D; // Коэффициенты уравнения Ax + By + Cz + D = 0
+};
+
+// Функция для вычисления угла между плоскостями
+double angleBetweenPlanes(Plane plane1, Plane plane2) {
+  double cos_angle = (plane1.A * plane2.A + plane1.B * plane2.B + plane1.C * plane2.C) /
+                    (sqrt(plane1.A * plane1.A + plane1.B * plane1.B + plane1.C * plane1.C) *
+                     sqrt(plane2.A * plane2.A + plane2.B * plane2.B + plane2.C * plane2.C));
+  double angle = acos(cos_angle); // В радианах
+
+  // Перевод в градусы
+  angle = angle * 180 / M_PI;
+
+  return angle;
+}
+
+// Функция для определения параллельности плоскостей
+bool isParallelPlanes(Plane plane1, Plane plane2) {
+  return (plane1.A / plane2.A == plane1.B / plane2.B == plane1.C / plane2.C);
+}
+
+// Функция для вычисления расстояния между параллельными плоскостями
+double distanceBetweenParallelPlanes(Plane plane1, Plane plane2) {
+  double d = abs(plane1.D - plane2.D) / sqrt(plane1.A * plane1.A + plane1.B * plane1.B + plane1.C * plane1.C);
+  return d;
+}
+
+// Функция для вычисления расстояния от точки до плоскости
+double distancePointPlane(double x, double y, double z, Plane plane) {
+  double d = abs(plane.A * x + plane.B * y + plane.C * z + plane.D) /
+             sqrt(plane.A * plane.A + plane.B * plane.B + plane.C * plane.C);
+  return d;
+}
+
+// Функция для вычисления параметров прямой пересечения плоскостей
+Line intersectionLinePlanes(Plane plane1, Plane plane2) {
+  Line line;
+
+  // Решение системы уравнений
+  double det = plane1.B * plane2.C - plane1.C * plane2.B;
+  if (det == 0) {
+    // Плоскости совпадают или параллельны
+    return {};
+  }
+
+  line.a = (plane2.C * plane1.D - plane1.C * plane2.D) / det;
+  line.b = (plane1.A * plane2.D - plane2.A * plane1.D) / det;
+  line.c = -(line.a * x + line.b * y); // Вычисление коэффициента c
+
+  return line;
+}
+
+int main() {
+  // Случайное генерирование параметров плоскостей и координаты точки
+  srand(time(NULL));
+
+  double A1 = (double)rand() / RAND_MAX;
+  double B1 = (double)rand() / RAND_MAX;
+  double C1 = (double)rand() / RAND_MAX;
+  double D1 = (double)rand() / RAND_MAX;
+
+  double A2 = (double)rand() / RAND_MAX;
+  double B2 = (double)rand() / RAND_MAX;
+  double C2 = (double)rand() / RAND_MAX;
+  double D2 = (double)rand() / RAND_MAX;
+
+  double x_point = (double)rand() / RAND_MAX;
+  double y_point = (double)rand() / RAND_MAX;
+  double z_point = (double)rand() / RAND_MAX;
+
+  // Создание объектов Plane
+  Plane plane1 = {A1, B1, C1, D1};
+  Plane plane2 = {A2, B2, C2, D2};
+
+  // Вычисление угла между плоскостями
+  double angle_between_planes = angleBetweenPlanes(plane1, plane2);
+
+  // Определение параллельности плоскостей
+  bool is_parallel = isParallelPlanes(plane1, plane2);
+
+  // Вычисление расстояния от точки до каждой плоскости
+  double distance_to_plane1
+
+3)
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+// Структура для хранения параметров параболы
+struct Parabola {
+  double a, b, c, h, k; // Коэффициенты уравнения y = ax^2 + bx + c
+};
+
+// Функция для проверки принадлежности точки параболе
+bool isPointOnParabola(double x, double y, Parabola parabola) {
+  double y_parabola = parabola.a * x * x + parabola.b * x + parabola.c;
+  return abs(y - y_parabola) < 1e-6; // Сравниваем с погрешностью
+}
+
+// Функция для вычисления координаты фокуса параболы
+double focusXParabola(Parabola parabola) {
+  double focus_x = -parabola.b / (2 * parabola.a);
+  return focus_x;
+}
+
+// Функция для вычисления координаты директрисы параболы
+double directrixYParabola(Parabola parabola) {
+  double directrix_y = parabola.k - 1 / (4 * parabola.a);
+  return directrix_y;
+}
+
+// Функция для вычисления расстояния от точки до фокуса параболы
+double distancePointFocusParabola(double x, double y, Parabola parabola) {
+  double focus_x = focusXParabola(parabola);
+  double distance = sqrt((x - focus_x) * (x - focus_x) + (y - parabola.k) * (y - parabola.k));
+  return distance;
+}
+
+// Функция для вычисления расстояния от точки до директрисы параболы
+double distancePointDirectrixParabola(double x, double y, Parabola parabola) {
+  double directrix_y = directrixYParabola(parabola);
+  double distance = abs(y - directrix_y);
+  return distance;
+}
+
+int main() {
+  // Случайное генерирование параметров параболы и координаты точки
+  srand(time(NULL));
+
+  double a = (double)rand() / RAND_MAX;
+  double b = (double)rand() / RAND_MAX;
+  double c = (double)rand() / RAND_MAX;
+  double h = (double)rand() / RAND_MAX;
+  double k = (double)rand() / RAND_MAX;
+
+  double x_point = (double)rand() / RAND_MAX;
+  double y_point = (double)rand() / RAND_MAX;
+
+  // Создание объекта Parabola
+  Parabola parabola = {a, b, c, h, k};
+
+  // Проверка принадлежности точки параболе
+  bool is_on_parabola = isPointOnParabola(x_point, y_point, parabola);
+
+  // Вычисление координаты фокуса параболы
+  double focus_x = focusXParabola(parabola);
+
+  // Вычисление координаты директрисы параболы
+  double directrix_y = directrixYParabola(parabola);
+
+  // Вычисление расстояния от точки до фокуса параболы
+  double distance_to_focus = distancePointFocusParabola(x_point, y_point, parabola);
+
+  // Вычисление расстояния от точки до директрисы параболы
+  double distance_to_directrix = distancePointDirectrixParabola(x_point, y_point, parabola);
+
+  // Вывод результатов
+  cout << "Параметры параболы: a = " << a << ", b = " << b << ", c = " << c << ", h = " << h << ", k = " << k << endl;
+  cout << "Координаты точки: x = " << x_point << ", y = " << y_point << endl;
+
+  if (is_on_parabola) {
+    cout << "Точка принадлежит параболе." << endl;
+  } else {
+    cout << "Точка не принадлежит параболе." << endl;
+  }
+
+  cout << "Координата фокуса: x = " << focus_x << endl;
+  cout << "Координата директрисы: y = " << directrix_y << endl;
+  cout << "Расстояние от точки до фокуса: " << distance_to_focus << endl;
+  cout << "Расстояние от точки до директрисы: " << distance_
+
+4)
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+// Структура для хранения параметров эллиптического цилиндра
+struct EllipticCylinder {
+  double a, b, h, x0, y0, z0; // Полуоси эллипса, координаты центра
+};
+
+// Структура для хранения параметров плоскости
+struct Plane {
+  double A, B, C, D; // Коэффициенты уравнения Ax + By + Cz + D = 0
+};
+
+// Структура для хранения параметров прямой
+struct Line {
+  double a, b, c, d, x0, y0, z0; // Коэффициенты направляющего вектора и координаты начальной точки
+};
+
+// Функция для проверки пересечения прямой и плоскости
+bool isLineIntersectsPlane(Line line, Plane plane) {
+  double det = plane.A * line.a + plane.B * line.b + plane.C * line.c;
+  if (det == 0) {
+    // Прямая параллельна или принадлежит плоскости
+    return false;
+  }
+
+  double t = -(plane.D * line.a + plane.D * line.b + plane.D * line.c) / det;
+  if (t < 0 || t > 1) {
+    // Точка пересечения лежит за пределами отрезка прямой
+    return false;
+  }
+
+  // Вычисление координаты точки пересечения
+  double x = line.x0 + t * line.a;
+  double y = line.y0 + t * line.b;
+  double z = line.z0 + t * line.c;
+
+  // Проверка принадлежности точки плоскости
+  double d = abs(plane.A * x + plane.B * y + plane.C * z + plane.D);
+  return d < 1e-6; // Сравниваем с погрешностью
+}
+
+// Функция для проверки пересечения прямой и эллиптического цилиндра
+bool isLineIntersectsEllipticCylinder(Line line, EllipticCylinder cylinder) {
+  // Преобразование прямой к локальной системе координат цилиндра
+  double x_prime = line.x0 - cylinder.x0;
+  double y_prime = line.y0 - cylinder.y0;
+  double z_prime = line.z0 - cylinder.z0;
+
+  double a_prime = line.a;
+  double b_prime = line.b;
+  double c_prime = line.c;
+
+  // Проверка пересечения преобразованной прямой с эллипсоидом
+  double det = b_prime * b_prime + c_prime * c_prime;
+  if (det == 0) {
+    // Прямая параллельна оси y
+    return false;
+  }
+
+  double discriminant = 4 * a_prime * a_prime * (x_prime * x_prime + z_prime * z_prime) -
+                        (b_prime * b_prime + c_prime * c_prime) * (x_prime * x_prime + z_prime * z_prime + y_prime * y_prime - cylinder.a * cylinder.a);
+
+  if (discriminant >= 0) {
+    // Прямая пересекает эллипсоид в двух точках
+    return true;
+  } else {
+    // Прямая не пересекает эллипсоид
+    return false;
+  }
+}
+
+// Функция для проверки принадлежности точки эллиптическому цилиндру
+bool isPointInsideEllipticCylinder(double x, double y, double z, EllipticCylinder cylinder) {
+  return (sqrt(x * x / (cylinder.a * cylinder.a) + y * y / (cylinder.b * cylinder.b)) <= 1 && abs(z - cylinder.z0) <= cylinder.h);
+}
+
+int main() {
+  // Случайное генерирование параметров эллиптического цилиндра, плоскости, прямой и точки
+  srand(time(NULL));
+
+  double a = (double)rand() / RAND_MAX;
+  double b = (double)rand() / RAND_MAX;
+  double h = (double)rand() / RAND_MAX;
+  double x0 = (double)rand() / RAND_MAX - 5;
+  double y0 = (double)rand() / RAND_MAX - 5;
+  double z0 = (double)rand() / RAND_MAX -
