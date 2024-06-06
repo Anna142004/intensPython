@@ -1,0 +1,172 @@
+1) #include <iostream>
+#include <cmath>
+
+using namespace std;
+
+double rectangleMethod(double a, double b, double n) {
+    double h = (b - a) / n;
+    double sum = 0;
+    for (int i = 0; i < n; ++i) {
+        double x = a + i * h;
+        double f = pow(x, 4) / (14 + pow(x, 2));
+        sum += f;
+    }
+    return h * sum;
+}
+
+double trapezeMethod(double a, double b, double n) {
+    double h = (b - a) / n;
+    double sum = 0.5 * (f(a) + f(b));
+    for (int i = 1; i < n; ++i) {
+        double x = a + i * h;
+        double f = pow(x, 4) / (14 + pow(x, 2));
+        sum += f;
+    }
+    return h * sum;
+}
+
+double simpsonMethod(double a, double b, double n) {
+    double h = (b - a) / n;
+    double sum1 = f(a) + f(b);
+    double sum2 = 0;
+    for (int i = 1; i < n; ++i) {
+        double x = a + i * h;
+        double f = pow(x, 4) / (14 + pow(x, 2));
+        sum1 += f;
+        if (i % 2 == 0) {
+            sum2 += f;
+        }
+    }
+    return h / 6 * (sum1 + 4 * sum2);
+}
+
+double f(double x) {
+    return pow(x, 4) / (14 + pow(x, 2));
+}
+
+int main() {
+    double a = 0;
+    double b = 1;
+    int n = 1000000;
+
+    double resultRectangle = rectangleMethod(a, b, n);
+    double resultTrapeze = trapezeMethod(a, b, n);
+    double resultSimpson = simpsonMethod(a, b, n);
+
+    cout << "Прямоугольники: " << resultRectangle << endl;
+    cout << "Трапеции: " << resultTrapeze << endl;
+    cout << "Симпсона: " << resultSimpson << endl;
+
+    return 0;
+}
+2) 
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+double rectangleMethod(double a, double b, double n) {
+    double h = (b - a) / n;
+    double sum = 0;
+    for (int i = 0; i < n; ++i) {
+        double x = a + i * h;
+        double f = (e^(-2 * x) * sin(14 * x)) / (14 * x + 1);
+        sum += f;
+    }
+    return h * sum;
+}
+
+double trapezeMethod(double a, double b, double n) {
+    double h = (b - a) / n;
+    double sum = 0.5 * (f(a) + f(b));
+    for (int i = 1; i < n; ++i) {
+        double x = a + i * h;
+        double f = (e^(-2 * x) * sin(14 * x)) / (14 * x + 1);
+        sum += f;
+    }
+    return h * sum;
+}
+
+double simpsonMethod(double a, double b, double n) {
+    double h = (b - a) / n;
+    double sum1 = f(a) + f(b);
+    double sum2 = 0;
+    for (int i = 1; i < n; ++i) {
+        double x = a + i * h;
+        double f = (e^(-2 * x) * sin(14 * x)) / (14 * x + 1);
+        sum1 += f;
+        if (i % 2 == 0) {
+            sum2 += f;
+        }
+    }
+    return h / 6 * (sum1 + 4 * sum2);
+}
+
+double f(double x) {
+    return (e^(-2 * x) * sin(14 * x)) / (14 * x + 1);
+}
+
+int main() {
+    double a = 0;
+    double b = 1;
+    int n = 1000000;
+
+    double resultRectangle = rectangleMethod(a, b, n);
+    double resultTrapeze = trapezeMethod(a, b, n);
+    double resultSimpson = simpsonMethod(a, b, n);
+
+    cout << "Прямоугольники: " << resultRectangle << endl;
+    cout << "Трапеции: " << resultTrapeze << endl;
+    cout << "Симпсона: " << resultSimpson << endl;
+
+    return 0;
+}
+3) #include <iostream>
+#include <cmath>
+
+using namespace std;
+
+double alternatingSeriesSum(int n) {
+    double sum = 0;
+    for (int i = 1; i <= n; ++i) {
+        double sign = pow(-1, i - 1);
+        double term = sign / (2 * i - 1);
+        sum += term;
+    }
+    return sum;
+}
+
+int main() {
+    int n = 1000000;
+    double result = alternatingSeriesSum(n);
+
+    cout << "Сумма ряда: " << result << endl;
+
+    return 0;
+}
+4) #include <iostream>
+#include <cmath>
+
+using namespace std;
+
+double seriesSum(double x, int n) {
+    double sum = 0;
+    for (int k = 1; k <= n; ++k) {
+        double term = pow(-1, k - 1) * sin(k * x) + 14 + k * k;
+        sum += term;
+    }
+    return sum;
+}
+
+int main() {
+    double x = 0;
+    int n = 1000000;
+
+    double result = seriesSum(x, n);
+
+    cout << "Сумма ряда: " << result << endl;
+
+    return 0;
+}
+
+
