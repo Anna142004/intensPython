@@ -1,0 +1,106 @@
+1) 
+import numpy as np
+
+def cubic_spline(x, xi, yi):
+  """
+  Функция для построения кубического сплайна.
+
+  Args:
+    x: Точка, в которой нужно вычислить значение функции.
+    xi: Массив узлов интерполяции.
+    yi: Массив значений функции в узлах интерполяции.
+
+  Returns:
+    Значение функции в точке x.
+  """
+
+  n = len(xi) - 1
+  h = xi[1] - xi[0]
+
+  # Матрица коэффициентов системы линейных уравнений
+  A = np.zeros((n + 2, n + 2))
+  A[0, 0] = 1
+  A[n + 1, n + 1] = 1
+
+  for i in range(1, n):
+    A[i, i] = 2 * h
+    A[i, i - 1] = h
+    A[i, i + 1] = h
+
+  # Вектор правых частей системы линейных уравнений
+  b = np.zeros(n + 2)
+  b[1] = (yi[1] - yi[0]) / h
+  b[n] = (yi[n] - yi[n - 1]) / h
+
+  # Решение системы линейных уравнений
+  c = np.linalg.solve(A, b)
+
+  # Вычисление значения функции в точке x
+  a = (c[n + 1] - c[n]) / (h ** 2)
+  b = c[n]
+  c = (3 * (yi[n] - yi[n - 1]) - 2 * h * c[n]) / (h ** 3)
+  d = yi[n - 1]
+
+  if x < xi[0]:
+    return yi[0]
+  elif x > xi[n]:
+    return yi[n]
+  else:
+    i = np.searchsorted(xi, x) - 1
+    return a * (x - xi[i])  3 + b * (x - xi[i])  2 + c * (x - xi[i]) + d
+
+# Пример использования
+x = 1.5
+xi = np.array([0.0, 1.0, 2.0, 3.0, 4.0])
+yi = np.array([0.0, 0.5, 0.86603, 1.0, 0.86603])
+
+y = cubic_spline(x, xi, yi)
+print(f"Значение функции в точке x = {x} равно: {y:.4f}")
+
+2)
+import numpy as np
+import math
+
+def newton_polynomial(x, xi, yi):
+  """
+  Функция для построения интерполяционного многочлена Ньютона.
+
+  Args:
+    x: Точка, в которой нужно вычислить значение функции.
+    xi: Массив узлов интерполяции.
+    yi: Массив значений функции в узлах интерполяции.
+
+  Returns:
+    Значение функции в точке x.
+  """
+
+  n = len(xi) - 1
+  h = xi[1] - xi[0]
+
+  # Разности Ньютона
+  diff = np.zeros((n + 1, n + 1))
+  diff[:, 0] = yi
+
+  for i in range(1, n + 1):
+    for j in range(n + 1 - i):
+      diff[i, j] = diff[i - 1, j + 1] - diff[i - 1, j]
+
+  # Вычисление интерполяционного многочлена
+  p = diff[n, 0]
+  for i in range(1, n + 1):
+    p += diff[n - i, i] * (x - xi[i]) ** i / math.factorial(i)
+
+  return p
+
+# Пример использования
+x = 0.25 * math.pi
+xi = np.array([0.1 * math.pi, 0.2 * math.pi, 0.3 * math.pi, 0.4 * math.pi])
+yi = np.array([0.995029, 0.940833, 0.877582, 0.790570])
+
+y_true = math.cos(x)
+y_approx = newton_polynomial(x, xi, yi)
+error = abs(y_true - y_approx)
+
+print(f"Значение функции в точке x* = {x:.4f} (точное): {y_true:.4f}")
+print(f"Значение функции в точке x* = {x:.4f} (интерполяция): {y_approx:.4f}")
+print(f"Погрешность интерполяции: {error:.4f}")
