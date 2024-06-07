@@ -1,391 +1,323 @@
-c++ 
+1) c++
 #include <iostream>
 #include <cmath>
 
 using namespace std;
 
-// Структура для представления комплексного числа
-struct ComplexNumber {
-    double real; // Действительная часть
-    double imag; // Мнимая часть
+class Complex {
+public:
+  double real;
+  double imag;
+
+  Complex(double real, double imag) {
+    this->real = real;
+    this->imag = imag;
+  }
+
+  Complex operator+(const Complex& other) {
+    return Complex(real + other.real, imag + other.imag);
+  }
+
+  Complex operator-(const Complex& other) {
+    return Complex(real - other.real, imag - other.imag);
+  }
+
+  Complex operator*(const Complex& other) {
+    return Complex(real * other.real - imag * other.imag,
+                   real * other.imag + imag * other.real);
+  }
+
+  Complex operator/(const Complex& other) {
+    double denominator = other.real * other.real + other.imag * other.imag;
+    return Complex((real * other.real + imag * other.imag) / denominator,
+                   (imag * other.real - real * other.imag) / denominator);
+  }
+
+  friend ostream& operator<<(ostream& os, const Complex& c) {
+    os << c.real << " + " << c.imag << "i";
+    return os;
+  }
 };
 
-// Функция для сложения комплексных чисел
-ComplexNumber addComplexNumbers(ComplexNumber z1, ComplexNumber z2) {
-    ComplexNumber result;
-    result.real = z1.real + z2.real;
-    result.imag = z1.imag + z2.imag;
-    return result;
+int main() {
+  Complex c1(2, 1);
+  Complex c2(2, -2);
+
+  Complex sum = c1 + c2;
+  Complex difference = c1 - c2;
+  Complex product = c1 * c2;
+  Complex quotient = c1 / c2;
+
+  cout << "Сумма: " << sum << endl;
+  cout << "Разность: " << difference << endl;
+  cout << "Произведение: " << product << endl;
+  cout << "Деление: " << quotient << endl;
+
+  return 0;
 }
 
-// Функция для вычитания комплексных чисел
-ComplexNumber subtractComplexNumbers(ComplexNumber z1, ComplexNumber z2) {
-    ComplexNumber result;
-    result.real = z1.real - z2.real;
-    result.imag = z1.imag - z2.imag;
-    return result;
-}
+python
 
-// Функция для умножения комплексных чисел
-ComplexNumber multiplyComplexNumbers(ComplexNumber z1, ComplexNumber z2) {
-    ComplexNumber result;
-    result.real = z1.real * z2.real - z1.imag * z2.imag;
-    result.imag = z1.real * z2.imag + z1.imag * z2.real;
-    return result;
-}
+import cmath
 
-// Функция для деления комплексных чисел
-ComplexNumber divideComplexNumbers(ComplexNumber z1, ComplexNumber z2) {
-    ComplexNumber result;
-    double denominator = z2.real * z2.real + z2.imag * z2.imag;
-    result.real = (z1.real * z2.real + z1.imag * z2.imag) / denominator;
-    result.imag = (z1.imag * z2.real - z1.real * z2.imag) / denominator;
-    return result;
-}
 
-// Функция для возведения комплексного числа в четвертую степень
-ComplexNumber pow4ComplexNumber(ComplexNumber z) {
-    ComplexNumber result;
-    result.real = pow(z.real * z.real - z.imag * z.imag, 2);
-    result.imag = 4.0 * z.real * z.imag * (z.real * z.real - z.imag * z.imag);
-    return result;
-}
+def complex_sum(a, b):
+    """
+    Calculate the sum of two complex numbers.
 
-// Функция для вычисления корня третьей степени из комплексного числа
-ComplexNumber cbrtComplexNumber(ComplexNumber z) {
-    double modulus = sqrt(z.real * z.real + z.imag * z.imag);
-    double angle = atan2(z.imag, z.real) / 3.0;
-    ComplexNumber result;
-    result.real = modulus * cos(angle);
-    result.imag = modulus * sin(angle);
-    return result;
-}
+    :param a: The first complex number.
+    :param b: The second complex number.
+    :return: The sum of the two complex numbers.
+    """
+    return a + b
 
-// Функция для вычисления корня уравнения Inx + (x + 1)^3 = 0 методом дихотомии
-double dichotomicMethod(double a, double b, double epsilon) {
-    double x1, x2, fx1, fx2;
-    while (b - a > epsilon) {
-        x1 = (a + b) / 2.0;
-        x2 = b - x1;
-        fx1 = log(x1) + pow(x1 + 1.0, 3.0);
-        fx2 = log(x2) + pow(x2 + 1.0, 3.0);
-        if (fx1 * fx2 < 0) {
-            b = x2;
-        } else {
-            a = x1;
-        }
-    }
-    return (a + b) / 2.0;
-}
 
-// Функция для вычисления корня уравнения Inx + (x + 1)^3 = 0 методом итераций
-double iterationMethod(double x0, double epsilon) {
-    double x1 = x0;
-    while (abs(log(x1) + pow(x1 + 1.0, 3.0)) > epsilon) {
-        x1 = x1 - (log(x1) + pow(x1 + 1.0, 3.0)) / (1.0 / x1 + 3.0 * pow(x1 + 1.0, 2.0));
-    }
-    return x1;
-}
+def complex_difference(a, b):
+    """
+    Calculate the difference of two complex numbers.
 
-// Функция для вычисления корня уравнения Inx +
+    :param a: The first complex number.
+    :param b: The second complex number.
+    :return: The difference of the two complex numbers.
+    """
+    return a - b
+
+
+def complex_product(a, b):
+    """
+    Calculate the product of two complex numbers.
+
+    :param a: The first complex number.
+    :param b: The second complex number.
+    :return: The product of the two complex numbers.
+    """
+    return a * b
+
+
+def complex_division(a, b):
+    """
+    Calculate the quotient of two complex numbers.
+
+    :param a: The numerator (the first complex number).
+    :param b: The denominator (the second complex number).
+    :return: The quotient of the two complex numbers.
+    """
+    return a / b
+
+
+def complex_power(a, power):
+    """
+    Calculate the power of a complex number.
+
+    :param a: The base complex number.
+    :param power: The exponent.
+    :return: The result of raising the complex number to the specified power.
+    """
+    return cmath.polar(a)[0] ** power * cmath.rect(1, cmath.polar(a)[1] * power)
+
+
+def complex_fourth_power(a):
+    """
+    Calculate the fourth power of a complex number.
+
+    :param a: The complex number.
+    :return: The fourth power of the complex number.
+    """
+    return complex_power(a, 4)
+
+
+def complex_cube_root(a):
+    """
+    Calculate the cube root of a complex number.
+
+    :param a: The complex number.
+    :return: The cube root of the complex number.
+    """
+    return complex_power(a, 1.0 / 3.0)
+
+
+if name == "main":
+    # Define two complex numbers
+    a = complex(2, 1)
+    b = complex(2, -2)
+
+    # Calculate the sum, difference, product, and quotient of the complex numbers
+    sum = complex_sum(a, b)
+    difference = complex_difference(a, b)
+    product = complex_product(a, b)
+    quotient = complex_division(a, b)
+
+    # Print the results
+    print("Сумма:", sum)
+    print("Разность:", difference)
+    print("Произведение:", product)
+    print("Деление:", quotient)
+
+    # Calculate the fourth power and cube root of the complex number 'a'
+    fourth_power = complex_fourth_power(a)
+    cube_root = complex_cube_root(a)
+
+    # Print the results
+    print("Четвертая степень:", fourth_power)
+    print
+
+2) c++ 
 #include <iostream>
 #include <cmath>
 
 using namespace std;
 
-// Функция для вычисления корня уравнения Inx + (x + 1)^3 = 0 методом хорд
-double chordMethod(double a, double b, double epsilon) {
-    double x1, x2, fx1, fx2;
-    while (b - a > epsilon) {
-        x1 = a + (b - a) * log(b) / (log(b) - log(a) + pow(b + 1.0, 3.0) - pow(a + 1.0, 3.0));
-        x2 = b - (b - x1) * log(x1) / (log(x1) - log(a) + pow(x1 + 1.0, 3.0) - pow(a + 1.0, 3.0));
-        fx1 = log(x1) + pow(x1 + 1.0, 3.0);
-        fx2 = log(x2) + pow(x2 + 1.0, 3.0);
-        if (fx1 * fx2 < 0) {
-            b = x2;
-        } else {
-            a = x1;
-        }
-    }
-    return (a + b) / 2.0;
+double f(double x) {
+  return x * exp(x) - 1;
 }
 
-// Функция для вычисления корня уравнения Inx + (x + 1)^3 = 0 методом Ньютона
-double newtonMethod(double x0, double epsilon) {
-    double x1 = x0;
-    while (abs(log(x1) + pow(x1 + 1.0, 3.0)) > epsilon) {
-        x1 = x1 - (log(x1) + pow(x1 + 1.0, 3.0)) / (1.0 / x1 + 3.0 * pow(x1 + 1.0, 2.0));
+double dichotomic_search(double a, double b, double epsilon) {
+  double x_mid;
+
+  while (b - a > epsilon) {
+    x_mid = (a + b) / 2;
+
+    if (f(x_mid) > 0) {
+      b = x_mid;
+    } else {
+      a = x_mid;
     }
-    return x1;
+  }
+
+  return (a + b) / 2;
 }
 
 int main() {
-    // Комплексные числа
-    ComplexNumber z1 = {2.0, 1.0};
-    ComplexNumber z2 = {3.0, 1.0};
-    ComplexNumber z3 = {1.0, 2.0};
+  double a = 0;
+  double b = 2;
+  double epsilon = 1e-6;
 
-    // Сложение комплексных чисел
-    ComplexNumber sum = addComplexNumbers(z1, z2);
-    cout << "Сумма: " << sum.real << " + " << sum.imag << "i" << endl;
+  double root = dichotomic_search(a, b, epsilon);
 
-    // Вычитание комплексных чисел
-    ComplexNumber difference = subtractComplexNumbers(z1, z2);
-    cout << "Разность: " << difference.real << " + " << difference.imag << "i" << endl;
+  cout << "Корень уравнения: " << root << endl;
 
-    // Умножение комплексных чисел
-    ComplexNumber product = multiplyComplexNumbers(z1, z2);
-    cout << "Произведение: " << product.real << " + " << product.imag << "i" << endl;
+  return 0;
+}
 
-    // Деление комплексных чисел
-    ComplexNumber quotient = divideComplexNumbers(z1, z2);
-    cout << "Частное: " << quotient.real << " + " << quotient.imag << "i" << endl;
+#include <iostream>
+#include <cmath>
 
-    // Четвертая степень комплексного числа
-    ComplexNumber power4 = pow4ComplexNumber(z3);
-    cout << "Четвертая степень: " << power4.real << " + " << power4.imag << "i" << endl;
+using namespace std;
 
-    // Корень третьей степени комплексного числа
-    ComplexNumber cbrt = cbrtComplexNumber(z3);
-    cout << "Корень третьей степени: " << cbrt.real << " + " << cbrt.imag << "i" << endl;
+double f(double x) {
+  return x * exp(x) - 1;
+}
 
-    // Корень уравнения методом дихотомии
-    double rootDichotomy = dichotomicMethod(0.0, 1.0, 1e-6);
-    cout << "Корень уравнения (метод дихотомии): " << rootDichotomy << endl;
+double iteration_method(double x0, double epsilon) {
+  double x_n = x0;
 
-    // Корень уравнения методом итераций
-    double rootIteration = iterationMethod(0.5, 1e-6);
-    cout << "Корень уравнения (метод итераций): " << rootIteration << endl;
+  while (abs(f(x_n)) > epsilon) {
+    x_n = x_n - f(x_n) / f'(x_n);
+  }
 
-    // Корень уравнения методом хорд
-    double rootChord = chordMethod(0.0, 1.0, 1e-6
+  return x_n;
+}
 
-python
-# Комплексные числа
-class ComplexNumber:
-    def init(self, real, imag):
-        self.real = real
-        self.imag = imag
+int main() {
+  double x0 = 1;
+  double epsilon = 1e-6;
 
-    def add(self, other):
-        if isinstance(other, ComplexNumber):
-            return ComplexNumber(self.real + other.real, self.imag + other.imag)
-        else:
-            raise TypeError("Невозможно сложить комплексное число с {}".format(type(other)))
+  double root = iteration_method(x0, epsilon);
 
-    def sub(self, other):
-        if isinstance(other, ComplexNumber):
-            return ComplexNumber(self.real - other.real, self.imag - other.imag)
-        else:
-            raise TypeError("Невозможно вычесть комплексное число из {}".format(type(other)))
+  cout << "Корень уравнения: " << root << endl;
 
-    def mul(self, other):
-        if isinstance(other, ComplexNumber):
-            real = self.real * other.real - self.imag * other.imag
-            imag = self.real * other.imag + self.imag * other.real
-            return ComplexNumber(real, imag)
-        else:
-            raise TypeError("Невозможно умножить комплексное число на {}".format(type(other)))
+  return 0;
+}
 
-    def truediv(self, other):
-        if isinstance(other, ComplexNumber):
-            denominator = other.real * other.real + other.imag * other.imag
-            real = (self.real * other.real + self.imag * other.imag) / denominator
-            imag = (self.imag * other.real - self.real * other.imag) / denominator
-            return ComplexNumber(real, imag)
-        else:
-            raise TypeError("Невозможно разделить комплексное число на {}".format(type(other)))
+#include <iostream>
+#include <cmath>
 
-    def abs(self):
-        return math.sqrt(self.real * self.real + self.imag * self.imag)
+using namespace std;
 
-    def str(self):
-        return "{:.2f} + {:.2f}i".format(self.real, self.imag)
+double f(double x) {
+  return x * exp(x) - 1;
+}
 
-# Функции для работы с комплексными числами
-def add_complex_numbers(z1, z2):
-    """
-    Сложение комплексных чисел.
+double chord_method(double x0, double x1, double epsilon) {
+  double x_n;
 
-    Args:
-        z1 (ComplexNumber): первое комплексное число.
-        z2 (ComplexNumber): второе комплексное число.
+  while (abs(x1 - x0) > epsilon) {
+    x_n = x1 - (f(x1) * (x1 - x0)) / (f(x1) - f(x0));
+    x0 = x1;
+    x1 = x_n;
+  }
 
-    Returns:
-        ComplexNumber: сумма комплексных чисел.
-    """
-    return z1 + z2
+  return x_n;
+}
 
-def subtract_complex_numbers(z1, z2):
-    """
-    Вычитание комплексных чисел.
+int main() {
+  double x0 = 0;
+  double x1 = 2;
+  double epsilon = 1e-6;
 
-    Args:
-        z1 (ComplexNumber): первое комплексное число.
-        z2 (ComplexNumber): второе комплексное число.
+  double root = chord_method(x0, x1, epsilon);
 
-    Returns:
-        ComplexNumber: разница комплексных чисел.
-    """
-    return z1 - z2
+  cout << "Корень уравнения: " << root << endl;
 
-def multiply_complex_numbers(z1, z2):
-    """
-    Умножение комплексных чисел.
+  return 0;
+)
 
-    Args:
-        z1 (ComplexNumber): первое комплексное число.
-        z2 (ComplexNumber): второе комплексное число.
-
-    Returns:
-        ComplexNumber: произведение комплексных чисел.
-    """
-    return z1 * z2
-
-def divide_complex_numbers(z1, z2):
-    """
-    Деление комплексных чисел.
-
-    Args:
-        z1 (ComplexNumber): первое комплексное число.
-        z2 (ComplexNumber): второе комплексное число.
-
-    Returns:
-        ComplexNumber: частное комплексных чисел.
-    """
-    return z1 / z2
-
-def pow4_complex_number(z):
-    """
-    Возведение комплексного числа в четвертую степень.
-
-    Args:
-        z (ComplexNumber): комплексное число.
-
-    Returns:
-        ComplexNumber: четвертая степень комплексного числа.
-    """
-    return z * z * z * z
-
-def cbrt_complex_number(z):
-    """
-    Вычисление корня третьей степени из комплексного числа.
-
-    Args:
-        z (ComplexNumber): комплексное число.
-
-    Returns:
-        ComplexNumber: корень третьей степени из комплексного числа.
-    """
-    modulus = abs(z)
-    angle = math.atan2(z.imag, z.real) / 3.0
-    return ComplexNumber(modulus * math.cos(angle), modulus * math.sin(angle))
-
-# Функции для поиска корня уравнения
-def dichotomic_method(a, b, epsilon):
-    """
+python 
 
 import math
 
-def equation(x):
-    return math.log(x) + (x + 1) ** 3
+def f(x):
+    return x**3 - x - 1
 
-def dichotomic_method(a, b, epsilon):
-    """
-    Метод дихотомии для поиска корня уравнения.
-
-    Args:
-        a (float): левая граница интервала.
-        b (float): правая граница интервала.
-        epsilon (float): точность вычислений.
-
-    Returns:
-        float: корень уравнения.
-    """
-    while b - a > epsilon:
-        x1 = (a + b) / 2.0
-        x2 = b - x1
-        f1 = equation(x1)
-        f2 = equation(x2)
-        if f1 * f2 < 0:
-            b = x2
+def dichotomy_method(a, b, eps):
+    while abs(b - a) > eps:
+        mid = (a + b) / 2
+        if f(mid) * f(a) < 0:
+            b = mid
         else:
-            a = x1
-    return (a + b) / 2.0
+            a = mid
+    return mid
 
-def iteration_method(x0, epsilon):
-    """
-    Метод итераций для поиска корня уравнения.
-
-    Args:
-        x0 (float): начальное приближение.
-        epsilon (float): точность вычислений.
-
-    Returns:
-        float: корень уравнения.
-    """
-    x1 = x0
-    while abs(equation(x1)) > epsilon:
-        x1 = x1 - equation(x1) / (1.0 / x1 + 3.0 * (x1 + 1.0) ** 2)
+def iteration_method(x0, eps):
+    while abs(f(x0)) > eps:
+        x1 = x0 - f(x0) / f'(x0)
+        x0 = x1
     return x1
 
-def chord_method(a, b, epsilon):
-    """
-    Метод хорд для поиска корня уравнения.
+def chord_method(x0, x1, eps):
+    while abs(f(x1)) > eps:
+        x2 = x1 - (f(x1) * (x1 - x0)) / (f(x1) - f(x0))
+        x0 = x1
+        x1 = x2
+    return x2
 
-    Args:
-        a (float): левая граница интервала.
-        b (float): правая граница интервала.
-        epsilon (float): точность вычислений.
-
-    Returns:
-        float: корень уравнения.
-    """
-    while b - a > epsilon:
-        x1 = a + (b - a) * math.log(b) / (math.log(b) - math.log(a) + (b + 1)  3 - (a + 1)  3)
-        x2 = b - (b - x1) * math.log(x1) / (math.log(x1) - math.log(a) + (x1 + 1)  3 - (a + 1)  3)
-        f1 = equation(x1)
-        f2 = equation(x2)
-        if f1 * f2 < 0:
-            b = x2
-        else:
-            a = x1
-    return (a + b) / 2.0
-
-def newton_method(x0, epsilon):
-    """
-    Метод Ньютона для поиска корня уравнения.
-
-    Args:
-        x0 (float): начальное приближение.
-        epsilon (float): точность вычислений.
-
-    Returns:
-        float: корень уравнения.
-    """
-    x1 = x0
-    while abs(equation(x1)) > epsilon:
-        x1 = x1 - equation(x1) / (1.0 / x1 + 3.0 * (x1 + 1.0) ** 2)
+def newton_method(x0, eps):
+    while abs(f(x0)) > eps:
+        x1 = x0 - f(x0) / f'(x0)
+        x0 = x1
     return x1
 
-if name == "main":
-    # Заданное уравнение
-    equation = lambda x: math.log(x) + (x + 1) ** 3
+# Точность
+eps = 1e-6
 
-    # Корень уравнения методом дихотомии
-    root_dichotomic = dichotomic_method(0.0, 1.0, 1e-6)
-    print("Корень уравнения (метод дихотомии):", root_dichotomic)
+# Корень методом дихотомии
+x_dichotomy = dichotomy_method(0, 2, eps)
+print("Корень методом дихотомии:", x_dichotomy)
 
-    # Корень уравнения методом итераций
-    root_iteration = iteration_method(0.5, 1e-6)
-    print("Корень уравнения (метод итераций):", root_iteration)
+# Корень методом итераций
+x_iteration = iteration_method(1, eps)
+print("Корень методом итераций:", x_iteration)
 
-    # Корень уравнения методом хорд
-    root_chord = chord_method(0.0, 1.0, 1e-6)
-    print("Корень уравнения (метод хорд):", root_chord)
+# Корень методом хорд
+x_chord = chord_method(0, 2, eps)
+print("Корень методом хорд:", x_chord)
 
-    # Корень уравнения методом Ньютона
-    root_newton = newton_method(0.5, 1e-6)
-    print("Корень уравнения (метод Ньютона):", root_newton)
+# Корень методом Ньютона
+x_newton = newton_method(1, eps)
+print("Корень методом Ньютона:", x_newton)
 
 
+
+
+
+   
